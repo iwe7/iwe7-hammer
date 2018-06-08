@@ -1,10 +1,6 @@
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { InjectionToken, Optional, Inject, Provider, NgModule } from '@angular/core';
-
-export interface HammerInstance {
-  on(eventName: string, callback: Function): void;
-  off(eventName: string, callback: Function): void;
-}
+import { HammerInstance, HammerOptions, HammerStatic, Recognizer, RecognizerStatic } from './gesture-annotations';
 export const HAMMER_OPTIONS = new InjectionToken<HammerOptions>('HAMMER_OPTIONS');
 // 默认全开启
 export class Iwe7HammerGestureConfig extends HammerGestureConfig {
@@ -26,8 +22,7 @@ export class Iwe7HammerGestureConfig extends HammerGestureConfig {
     super();
   }
   buildHammer(element: HTMLElement): HammerInstance {
-    console.log(this._hammerOptions);
-    const mc = new this._hammer(element, this._hammerOptions || undefined);
+    const mc = new this._hammer(element, this._hammerOptions as any || undefined);
     const pan = new this._hammer.Pan();
     const swipe = new this._hammer.Swipe();
     const press = new this._hammer.Press();
@@ -43,8 +38,8 @@ export class Iwe7HammerGestureConfig extends HammerGestureConfig {
     let recognizer = new (base.constructor as RecognizerStatic)(options);
     inheritances.push(base);
     // 同时识别
-    inheritances.forEach(item => recognizer.recognizeWith(item));
-    return recognizer;
+    inheritances.forEach(item => recognizer.recognizeWith(item as any));
+    return recognizer as any;
   }
 }
 
